@@ -8,13 +8,10 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 class Executor extends AbstractActor {
+    Executor() { }
 
     static Props props() {
         return Props.create(Executor.class, {new Executor()})
-    }
-
-    Executor() {
-
     }
 
     @Override
