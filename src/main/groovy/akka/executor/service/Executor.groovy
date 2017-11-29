@@ -22,7 +22,7 @@ class Executor extends AbstractActor {
         return receiveBuilder().match(Object.class, { msg ->
 
             log.info("START in test actor of node ${msg}")
-            sleep(2000)
+            sleep(7000)
             log.info("STOP in test actor of node ${msg}")
 
         }).build()
