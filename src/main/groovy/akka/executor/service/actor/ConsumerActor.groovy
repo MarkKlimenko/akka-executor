@@ -1,17 +1,19 @@
-package akka.executor.service
+package akka.executor.service.actor
 
 import akka.actor.AbstractActor
 import akka.actor.Props
+
 // import akka.actor.AbstractActor.Receive - need to be imported
 import akka.actor.AbstractActor.Receive
+
 import groovy.util.logging.Slf4j
 
 @Slf4j
-class Executor extends AbstractActor {
-    Executor() { }
+class ConsumerActor extends AbstractActor {
+    ConsumerActor() { }
 
     static Props props() {
-        return Props.create(Executor.class, {new Executor()})
+        return Props.create(ConsumerActor.class, {new ConsumerActor()})
     }
 
     @Override
