@@ -1,0 +1,31 @@
+package akka.executor.service.consumer
+
+import akka.actor.AbstractActor
+import akka.actor.Props
+
+// import akka.actor.AbstractActor.Receive - need to be imported
+import akka.actor.AbstractActor.Receive
+
+import groovy.util.logging.Slf4j
+
+@Slf4j
+class ResponseConsumerActor extends AbstractActor {
+    ResponseConsumerActor() { }
+
+    static Props props() {
+        return Props.create(ResponseConsumerActor.class, {new ResponseConsumerActor()})
+    }
+
+    @Override
+    Receive createReceive() {
+        return receiveBuilder().match(Object.class, { msg ->
+
+            log.info("START in RESPONSE CONSUMER actor of node ${msg}")
+            sleep(2000)
+            log.info("STOP in RESPONSE CONSUMER actor of node ${msg}")
+
+            getSender().tell('response result', getSender())
+
+        }).build()
+    }
+}

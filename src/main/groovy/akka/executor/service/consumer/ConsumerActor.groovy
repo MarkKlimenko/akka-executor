@@ -1,4 +1,4 @@
-package akka.executor.service.actor
+package akka.executor.service.consumer
 
 import akka.actor.AbstractActor
 import akka.actor.Props
@@ -20,9 +20,9 @@ class ConsumerActor extends AbstractActor {
     Receive createReceive() {
         return receiveBuilder().match(Object.class, { msg ->
 
-            log.info("START in test actor of node ${msg}")
-            sleep(7000)
-            log.info("STOP in test actor of node ${msg}")
+            log.info("START in CONSUMER actor of node ${msg}")
+            sleep(2000)
+            log.info("STOP in CONSUMER actor of node ${msg}")
 
         }).build()
     }

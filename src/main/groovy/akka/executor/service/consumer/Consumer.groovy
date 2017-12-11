@@ -1,7 +1,6 @@
-package akka.executor.service
+package akka.executor.service.consumer
 
 import akka.actor.ActorSystem
-import akka.executor.service.actor.ConsumerActor
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import groovy.util.logging.Slf4j
@@ -18,6 +17,7 @@ class Consumer {
 
         ActorSystem system = ActorSystem.create('ClusterSystem', config)
 
-        system.actorOf(ConsumerActor.props(), 'consumer')
+        system.actorOf(ResponseConsumerActor.props(), 'consumer')
+        //system.actorOf(ResponseConsumerActor.props(), 'responseConsumer')
     }
 }
