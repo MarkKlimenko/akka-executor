@@ -53,35 +53,51 @@ class Producer extends  AllDirectives  {
                         final ExecutionContext ec = system.dispatcher()
 
                         log.info('START')
-
-
-
-                        Future<String> res =  ['a', 'b', 'c'].collect {
-                            new SubTask(it)
-                        }.collect {
-                            future(it,ec)
-                        }. with {
-                            sequence(it, ec)
-                        }.map(
-                                new Mapper<Iterable<String>, String>() {
-                                    String apply(Iterable<String> ints) {
-                                        String sum = ""
-                                        for (String i : ints)
-                                            sum += i
-                                        return sum
-                                    }
-                                }, ec)
-
-
-                        res.onSuccess(new PrintResult<Long>(), system.dispatcher())
-
+                        future(new Operation(system), ec)
+                        log.info('STOP')
                         complete("complete")
                     })
                 })
         )
     }
 
-    class SubTask implements Callable<String> {
+    static class Operation implements Callable<String> {
+        ActorSystem system
+
+        Operation(ActorSystem system) {
+            this.system = system
+        }
+
+        String call() {
+            log.info('INNER START')
+            final ExecutionContext ec = system.dispatcher()
+
+
+            Future<String> res =  ['a', 'b', 'c'].collect {
+                new SubTask(it)
+            }.collect {
+                future(it,ec)
+            }. with {
+                sequence(it, ec)
+            }.map(
+                    new Mapper<Iterable<String>, String>() {
+                        String apply(Iterable<String> ints) {
+                            String sum = ""
+                            for (String i : ints)
+                                sum += i
+                            return sum
+                        }
+                    }, ec)
+
+            log.info('INNER BEFORE SUCCESS')
+            res.onSuccess(new PrintResult<Long>(), system.dispatcher())
+            log.info('INNER STOP')
+
+            "executed"
+        }
+    }
+
+    static class SubTask implements Callable<String> {
         String param
 
         SubTask(String param) {
