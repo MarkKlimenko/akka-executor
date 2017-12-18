@@ -8,6 +8,8 @@ import akka.actor.AbstractActor.Receive
 
 import groovy.util.logging.Slf4j
 
+import java.util.concurrent.Callable
+
 @Slf4j
 class ResponseConsumerActor extends AbstractActor {
     ResponseConsumerActor() { }
@@ -20,12 +22,26 @@ class ResponseConsumerActor extends AbstractActor {
     Receive createReceive() {
         return receiveBuilder().match(Object.class, { msg ->
 
-            log.info("START in RESPONSE CONSUMER actor of node ${msg}")
+            /*log.info("START in RESPONSE CONSUMER actor of node ${msg}")
             sleep(2000)
             log.info("STOP in RESPONSE CONSUMER actor of node ${msg}")
+            getSender().tell('response result', getSender())*/
 
-            getSender().tell('response result', getSender())
 
         }).build()
     }
+
+    class Executed implements Callable<String> {
+        String text
+
+        Executed(String text) {
+            this.text = text
+        }
+
+        @Override
+        String call() throws Exception {
+            text
+        }
+    }
+
 }
