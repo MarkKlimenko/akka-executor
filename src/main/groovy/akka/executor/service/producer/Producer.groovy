@@ -5,6 +5,7 @@ import akka.actor.ActorRef
 import akka.actor.ActorSystem
 import akka.dispatch.Mapper
 import akka.dispatch.OnSuccess
+import akka.executor.service.SystemProvider
 import akka.http.javadsl.ConnectHttp
 import akka.http.javadsl.Http
 import akka.http.javadsl.ServerBinding
@@ -31,7 +32,8 @@ import static akka.dispatch.Futures.*
 class Producer extends  AllDirectives  {
     static void main(String[] args) {
         Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + args[0]).withFallback(ConfigFactory.load())
-        ActorSystem system = ActorSystem.create('ClusterSystem', config)
+        SystemProvider.createInstance(config)
+        ActorSystem system = SystemProvider.instance()
 
         final Http http = Http.get(system);
         Materializer materializer = ActorMaterializer.create(system)
@@ -48,72 +50,15 @@ class Producer extends  AllDirectives  {
         return route(
                 path("hello", {
                     get({
-                        // executorActor.tell('produce', ActorRef.noSender())
-
-                        final ExecutionContext ec = system.dispatcher()
-
                         log.info('START')
-                        future(new Operation(system), ec)
+                        executorActor.tell('1', ActorRef.noSender())
+                        executorActor.tell('2', ActorRef.noSender())
+                        executorActor.tell('3', ActorRef.noSender())
+                        executorActor.tell('4', ActorRef.noSender())
                         log.info('STOP')
                         complete("complete")
                     })
                 })
         )
-    }
-
-    static class Operation implements Callable<String> {
-        ActorSystem system
-
-        Operation(ActorSystem system) {
-            this.system = system
-        }
-
-        String call() {
-            log.info('INNER START')
-            final ExecutionContext ec = system.dispatcher()
-
-
-            Future<String> res =  ['a', 'b', 'c'].collect {
-                new SubTask(it)
-            }.collect {
-                future(it,ec)
-            }. with {
-                sequence(it, ec)
-            }.map(
-                    new Mapper<Iterable<String>, String>() {
-                        String apply(Iterable<String> ints) {
-                            String sum = ""
-                            for (String i : ints)
-                                sum += i
-                            return sum
-                        }
-                    }, ec)
-
-            log.info('INNER BEFORE SUCCESS')
-            res.onSuccess(new PrintResult<Long>(), system.dispatcher())
-            log.info('INNER STOP')
-
-            "executed"
-        }
-    }
-
-    static class SubTask implements Callable<String> {
-        String param
-
-        SubTask(String param) {
-            this.param = param
-        }
-
-        @Override
-        String call() throws Exception {
-            sleep(2000)
-            return param
-        }
-    }
-
-    final static class PrintResult<T> extends OnSuccess<T> {
-        @Override public final void onSuccess(T t) {
-            System.out.println(t)
-        }
     }
 }
