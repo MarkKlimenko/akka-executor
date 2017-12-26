@@ -7,18 +7,12 @@ import akka.actor.Props
 import akka.dispatch.Mapper
 import akka.dispatch.OnSuccess
 import akka.executor.service.SystemProvider
-import akka.pattern.Patterns
 
 // import akka.actor.AbstractActor.Receive - need to be imported
-import akka.actor.AbstractActor.Receive
-
 import akka.routing.FromConfig
-import akka.util.Timeout
 import groovy.util.logging.Slf4j
-import scala.concurrent.Await
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-import scala.concurrent.duration.Duration
 
 import java.util.concurrent.Callable
 

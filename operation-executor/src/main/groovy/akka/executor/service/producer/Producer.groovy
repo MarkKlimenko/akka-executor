@@ -3,8 +3,6 @@ package akka.executor.service.producer
 import akka.NotUsed
 import akka.actor.ActorRef
 import akka.actor.ActorSystem
-import akka.dispatch.Mapper
-import akka.dispatch.OnSuccess
 import akka.executor.service.SystemProvider
 import akka.http.javadsl.ConnectHttp
 import akka.http.javadsl.Http
@@ -19,14 +17,8 @@ import akka.stream.javadsl.Flow
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import groovy.util.logging.Slf4j
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
 
-import java.util.concurrent.Callable
 import java.util.concurrent.CompletionStage
-
-
-import static akka.dispatch.Futures.*
 
 @Slf4j
 class Producer extends  AllDirectives  {

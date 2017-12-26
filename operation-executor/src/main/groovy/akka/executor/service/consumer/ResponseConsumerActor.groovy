@@ -4,8 +4,6 @@ import akka.actor.AbstractActor
 import akka.actor.Props
 
 // import akka.actor.AbstractActor.Receive - need to be imported
-import akka.actor.AbstractActor.Receive
-
 import groovy.util.logging.Slf4j
 
 import java.util.concurrent.Callable
