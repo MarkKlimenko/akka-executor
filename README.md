@@ -5,3 +5,6 @@
 **На данный момент запускается producer и множество consumer-ов:**
 - producer отправляет сообщения в mailbox, 
 - сообщения распределяются среди consumer экторами при помощи router dispatcher, который работает в режиме adaptive load balancing strategy
+
+
+https://lostintimedev.com/2017/05/26/running-akka-cluster-on-docker-swarm.html

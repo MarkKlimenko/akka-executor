@@ -1,18 +1,17 @@
 package akka.executor.service
 
-import akka.actor.AbstractActor
-import akka.actor.ActorRef
-import akka.actor.ActorSystem
-import akka.actor.Cancellable
-import akka.actor.Props
+import akka.actor.*
+import akka.cluster.singleton.ClusterSingletonManager
+import akka.cluster.singleton.ClusterSingletonManagerSettings
+import akka.cluster.singleton.ClusterSingletonProxy
+import akka.cluster.singleton.ClusterSingletonProxySettings
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-
 import groovy.util.logging.Slf4j
 import scala.concurrent.duration.Duration
+
 // import akka.actor.AbstractActor.Receive - need to be imported
 import akka.actor.AbstractActor.Receive
-
 import java.util.concurrent.TimeUnit
 
 @Slf4j
@@ -21,7 +20,16 @@ class ScheduledApplication {
         Config config = ConfigFactory.parseString("akka.remote.netty.tcp.port=" + args[0]).withFallback(ConfigFactory.load())
         ActorSystem system = ActorSystem.create('ClusterSystem', config)
 
-        ActorRef tickActor = system.actorOf(Ticker.props(), 'consumer')
+
+        final ClusterSingletonManagerSettings settings =
+                ClusterSingletonManagerSettings.create(system).withRole("worker")
+        ActorRef tickActor = system.actorOf(
+                ClusterSingletonManager.props(
+                        Ticker.props(),
+                        PoisonPill.getInstance(),
+                        settings),
+                "consumer");
+
 
         Cancellable cancellable = system.scheduler().schedule(Duration.Zero(),
                 Duration.create(5, TimeUnit.SECONDS), tickActor, "Tick",
