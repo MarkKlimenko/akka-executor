@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        repositories {
+            mavenCentral()
+        }
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.7.RELEASE'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'org.springframework.boot'
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.3.11',
+            'org.springframework.boot:spring-boot-starter-web:1.5.7.RELEASE',
+
+            'com.typesafe.akka:akka-actor_2.12:2.5.8',
+            'com.typesafe.akka:akka-cluster-sharding_2.12:2.5.8',
+            'com.typesafe.akka:akka-cluster-tools_2.12:2.5.8',
+            'com.typesafe.akka:akka-cluster-metrics_2.12:2.5.8',
+            'com.typesafe.akka:akka-slf4j_2.12:2.5.8'
+}

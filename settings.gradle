@@ -1,4 +1,5 @@
 rootProject.name = 'executor'
 include 'claster-scheduler'
 include 'operation-executor'
+include 'user-app'
 
